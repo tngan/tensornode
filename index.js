@@ -1,5 +1,6 @@
 const ROOT = './';
 const SERVING_API = './tensorflow_serving/apis/';
+const GOOGLE_PROTOBUF = './google/protobuf';
 const grpc = require('grpc');
 
 const modelDescriptor = grpc.load({
@@ -17,8 +18,16 @@ const predictionServiceDescriptor = grpc.load({
   file: `${SERVING_API}/prediction_service.proto`
 });
 
-module.export = {
+const wrappers = grpc.load({
+  root: ROOT,
+  file: `${GOOGLE_PROTOBUF}/wrappers.proto`
+});
+
+module.exports = {
   modelDescriptor,
   predictDescriptor,
-  predictionServiceDescriptor
+  predictionServiceDescriptor,
+  wrappers: wrappers.google.protobuf,
+  model: modelDescriptor.tensorflow.serving,
+  serving: predictDescriptor.tensorflow.serving,
 };
